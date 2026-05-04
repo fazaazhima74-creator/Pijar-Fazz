@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Pijar - Platform Belajar Digital">
+    <meta property="og:description" content="Platform Belajar Digital • Modern • Interaktif">
+    <meta property="og:image" content="/LogoPijar.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="/LogoPijar.png">
+    <title>Pijar - Platform Belajar Digital</title>
+    <link rel="icon" type="image/png" href="/LogoPijar.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .bubble {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 20s infinite ease-in-out;
+            z-index: 0;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-30px) translateX(20px);
+            }
+        }
+        
+        #app {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .home-container {
+            text-align: center;
+            width: 100%;
+        }
+        
+        .logo {
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        .logo h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            background: linear-gradient(135deg, #fff 0%, #a8ede0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 10px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 50px 40px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 18px 50px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            min-width: 200px;
+        }
+        
+        .btn-guru {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+        
+        .btn-siswa {
+            background: linear-gradient(135deg, #4ecdc4, #44bd6e);
+        }
+        
+        .btn:hover {
+            transform: scale(1.05) translateY(-5px);
+            filter: brightness(1.05);
+        }
+        
+        .auth-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .auth-card {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px);
+            border-radius: 35px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .auth-card h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 25px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4ecdc4, #44bd6e);
+        }
+        
+        .guru-tab .tab-btn.active {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 8px;
+        }
+        
+        input,
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        
+        input:focus,
+        textarea:focus {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px #4ecdc4;
+        }
+        
+        input::placeholder,
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4ecdc4, #44bd6e);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-submit-guru {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+        
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            margin-top: 15px;
+        }
+        
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .error-message {
+            color: #ffaaaa;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .success-message {
+            color: #a8ede0;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .dashboard-container {
+            width: 100%;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .navbar h2 {
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 100, 100, 0.8);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 100, 100, 1);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .dash-card {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 25px;
+            transition: transform 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dash-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .dash-card h3 {
+            color: #4ecdc4;
+            margin-bottom: 15px;
+        }
+        
+        .dash-card p {
+            color: white;
+            margin: 8px 0;
+        }
+        
+        .small-btn {
+            background: #4ecdc4;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        
+        .small-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .server-warning {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #ff4444;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+            font-weight: bold;
+        }
+        
+        .server-warning button {
+            background: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .btn {
+                padding: 14px 35px;
+                font-size: 1.2rem;
+                min-width: 150px;
+            }
+            .logo h1 {
+                font-size: 2.5rem;
+            }
+            .card {
+                padding: 35px 25px;
+            }
+            .button-group {
+                gap: 15px;
+                flex-direction: column;
+                align-items: center;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bubbles"></div>
+    <div id="app"></div>
+    <div id="serverWarning" class="server-warning hidden"></div>
+
+    <script>
+        const API_URL = 'http://localhost:9090';
+        let isServerRunning = false;
+
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(API_URL + '/api/status');
+                const data = await response.json();
+                if (response.ok && data.status === 'ok') {
+                    isServerRunning = true;
+                    document.getElementById('serverWarning').classList.add('hidden');
+                    return true;
+                }
+            } catch (error) {
+                console.log('Server not connected:', error);
+            }
+            isServerRunning = false;
+            const warningDiv = document.getElementById('serverWarning');
+            warningDiv.innerHTML = '⚠️ Server tidak terhubung! Pastikan server berjalan di port 9090. <button onclick="openServerGuide()">Panduan</button> <button onclick="checkServerAndReload()">Coba Lagi</button>';
+            warningDiv.classList.remove('hidden');
+            return false;
+        }
+
+        function openServerGuide() {
+            var isWindows = navigator.platform.includes('Win');
+            alert('📌 CARA MENJALANKAN SERVER:\n\n' + (isWindows ? '1. Buka folder server\n2. Double-click "start-server.bat"\n\nATAU\n' : '1. Buka Terminal\n2. cd server\n3. npm install\n4. npm start\n\n') + '📌 Pastikan port 9090 tersedia\n📌 Server akan berjalan di http://localhost:9090');
+        }
+
+        async function checkServerAndReload() {
+            var status = await checkServerStatus();
+            if (status) location.reload();
+        }
+
+        async function apiCall(endpoint, method, body) {
+            await checkServerStatus();
+            if (!isServerRunning) throw new Error('Server tidak terhubung!');
+            var response = await fetch(API_URL + endpoint, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            return await response.json();
+        }
+
+        var Session = {
+            setCurrentUser: function(user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+            },
+            getCurrentUser: function() {
+                var user = localStorage.getItem('currentUser');
+                return user ? JSON.parse(user) : null;
+            },
+            clearSession: function() {
+                localStorage.removeItem('currentUser');
+            }
+        };
+
+        function navigateTo(role) {
+            if (role === 'guru') renderAuthGuru();
+            else if (role === 'siswa') renderAuthSiswa();
+            else if (role === 'dashboardGuru') renderDashboardGuru();
+            else if (role === 'dashboardSiswa') renderDashboardSiswa();
+            else renderHome();
+        }
+
+        function createBubbles() {
+            var container = document.getElementById('bubbles');
+            for (var i = 0; i < 30; i++) {
+                var bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                var size = Math.random() * 100 + 30;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.top = Math.random() * 100 + '%';
+                bubble.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                bubble.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(bubble);
+            }
+        }
+
+        function renderHome() {
+            document.getElementById('app').innerHTML = `
+                <div class="home-container">
+                    <div class="logo"><h1>✨ Pijar ✨</h1><p>Platform Belajar Digital • Modern • Interaktif</p></div>
+                    <div class="card"><div class="button-group"><button class="btn btn-guru" id="btnGuru">👨‍🏫 GURU</button><button class="btn btn-siswa" id="btnSiswa">👩‍🎓 SISWA</button></div></div>
+                    <div style="margin-top:40px; color:rgba(255,255,255,0.4); text-align:center;"><p>© 2026 Pijar Education • Belajar Jadi Lebih Mudah</p></div>
+                </div>
+            `;
+            document.getElementById('btnGuru').onclick = function() {
+                navigateTo('guru');
+            };
+            document.getElementById('btnSiswa').onclick = function() {
+                navigateTo('siswa');
+            };
+        }
+
+        function renderAuthSiswa() {
+            document.getElementById('app').innerHTML = `
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <h2>👩‍🎓 Masuk sebagai Siswa</h2>
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" id="loginTabSiswa">Login</button>
+                            <button class="tab-btn" id="registerTabSiswa">Register</button>
+                        </div>
+                        <div id="loginFormSiswa">
+                            <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="email@example.com"></div>
+                            <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="******"></div>
+                            <button class="btn-submit" id="doLoginSiswa">Login sebagai Siswa</button>
+                            <div class="error-message" id="loginError"></div>
+                        </div>
+                        <div id="registerFormSiswa" class="hidden">
+                            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="regName" placeholder="Nama lengkap"></div>
+                            <div class="form-group"><label>NISN</label><input type="text" id="regNisn" placeholder="NISN (opsional)"></div>
+                            <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
+                            <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Minimal 6 karakter"></div>
+                            <button class="btn-submit" id="doRegisterSiswa">Daftar sebagai Siswa</button>
+                            <div class="error-message" id="registerError"></div>
+                        </div>
+                        <button class="btn-submit btn-back" id="backToHomeSiswa">⬅ Kembali</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('loginTabSiswa').onclick = function() {
+                document.getElementById('loginFormSiswa').classList.remove('hidden');
+                document.getElementById('registerFormSiswa').classList.add('hidden');
+                document.getElementById('loginTabSiswa').classList.add('active');
+                document.getElementById('registerTabSiswa').classList.remove('active');
+            };
+            document.getElementById('registerTabSiswa').onclick = function() {
+                document.getElementById('loginFormSiswa').classList.add('hidden');
+                document.getElementById('registerFormSiswa').classList.remove('hidden');
+                document.getElementById('registerTabSiswa').classList.add('active');
+                document.getElementById('loginTabSiswa').classList.remove('active');
+            };
+            document.getElementById('doLoginSiswa').onclick = async function() {
+                var email = document.getElementById('loginEmail').value;
+                var password = document.getElementById('loginPassword').value;
+                if (!email || !password) {
+                    document.getElementById('loginError').innerText = 'Email dan password wajib diisi';
+                    return;
+                }
+                try {
+                    var result = await apiCall('/api/auth/siswa/login', 'POST', {
+                        email: email,
+                        password: password
+                    });
+                    if (result.success) {
+                        Session.setCurrentUser(Object.assign({}, result.user, {
+                            role: 'siswa'
+                        }));
+                        renderDashboardSiswa();
+                    } else {
+                        document.getElementById('loginError').innerText = result.message || 'Login gagal';
+                    }
+                } catch (err) {
+                    document.getElementById('loginError').innerText = err.message;
+                }
+            };
+            document.getElementById('doRegisterSiswa').onclick = async function() {
+                var nama = document.getElementById('regName').value;
+                var nisn = document.getElementById('regNisn').value;
+                var email = document.getElementById('regEmail').value;
+                var password = document.getElementById('regPassword').value;
+                if (!nama || !email || !password) {
+                    document.getElementById('registerError').innerText = 'Nama, email, dan password wajib diisi';
+                    return;
+                }
+                if (password.length < 6) {
+                    document.getElementById('registerError').innerText = 'Password minimal 6 karakter';
+                    return;
+                }
+                try {
+                    var result = await apiCall('/api/auth/siswa/register', 'POST', {
+                        nama: nama,
+                        nisn: nisn,
+                        email: email,
+                        password: password
+                    });
+                    if (result.success) {
+                        Session.setCurrentUser(Object.assign({}, result.user, {
+                            role: 'siswa'
+                        }));
+                        renderDashboardSiswa();
+                    } else {
+                        document.getElementById('registerError').innerText = result.message || 'Registrasi gagal';
+                    }
+                } catch (err) {
+                    document.getElementById('registerError').innerText = err.message;
+                }
+            };
+            document.getElementById('backToHomeSiswa').onclick = function() {
+                renderHome();
+            };
+        }
+
+        function renderAuthGuru() {
+            document.getElementById('app').innerHTML = `
+                <div class="auth-container guru-tab">
+                    <div class="auth-card">
+                        <h2>👨‍🏫 Masuk sebagai Guru</h2>
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" id="loginTabGuru">Login</button>
+                            <button class="tab-btn" id="registerTabGuru">Register</button>
+                        </div>
+                        <div id="loginFormGuru">
+                            <div class="form-group"><label>Email</label><input type="email" id="loginEmailGuru" placeholder="email@example.com"></div>
+                            <div class="form-group"><label>Password</label><input type="password" id="loginPasswordGuru" placeholder="******"></div>
+                            <button class="btn-submit btn-submit-guru" id="doLoginGuru">Login sebagai Guru</button>
+                            <div class="error-message" id="loginErrorGuru"></div>
+                        </div>
+                        <div id="registerFormGuru" class="hidden">
+                            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="regNameGuru" placeholder="Nama lengkap"></div>
+                            <div class="form-group"><label>NIP</label><input type="text" id="regNipGuru" placeholder="NIP (opsional)"></div>
+                            <div class="form-group"><label>Email</label><input type="email" id="regEmailGuru" placeholder="email@example.com"></div>
+                            <div class="form-group"><label>Password</label><input type="password" id="regPasswordGuru" placeholder="Minimal 6 karakter"></div>
+                            <button class="btn-submit btn-submit-guru" id="doRegisterGuru">Daftar sebagai Guru</button>
+                            <div class="error-message" id="registerErrorGuru"></div>
+                        </div>
+                        <button class="btn-submit btn-back" id="backToHomeGuru">⬅ Kembali</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('loginTabGuru').onclick = function() {
+                document.getElementById('loginFormGuru').classList.remove('hidden');
+                document.getElementById('registerFormGuru').classList.add('hidden');
+                document.getElementById('loginTabGuru').classList.add('active');
+                document.getElementById('registerTabGuru').classList.remove('active');
+            };
+            document.getElementById('registerTabGuru').onclick = function() {
+                document.getElementById('loginFormGuru').classList.add('hidden');
+                document.getElementById('registerFormGuru').classList.remove('hidden');
+                document.getElementById('registerTabGuru').classList.add('active');
+                document.getElementById('loginTabGuru').classList.remove('active');
+            };
+            document.getElementById('doLoginGuru').onclick = async function() {
+                var email = document.getElementById('loginEmailGuru').value;
+                var password = document.getElementById('loginPasswordGuru').value;
+                if (!email || !password) {
+                    document.getElementById('loginErrorGuru').innerText = 'Email dan password wajib diisi';
+                    return;
+                }
+                try {
+                    var result = await apiCall('/api/auth/guru/login', 'POST', {
+                        email: email,
+                        password: password
+                    });
+                    if (result.success) {
+                        Session.setCurrentUser(Object.assign({}, result.user, {
+                            role: 'guru'
+                        }));
+                        renderDashboardGuru();
+                    } else {
+                        document.getElementById('loginErrorGuru').innerText = result.message || 'Login gagal';
+                    }
+                } catch (err) {
+                    document.getElementById('loginErrorGuru').innerText = err.message;
+                }
+            };
+            document.getElementById('doRegisterGuru').onclick = async function() {
+                var nama = document.getElementById('regNameGuru').value;
+                var nip = document.getElementById('regNipGuru').value;
+                var email = document.getElementById('regEmailGuru').value;
+                var password = document.getElementById('regPasswordGuru').value;
+                if (!nama || !email || !password) {
+                    document.getElementById('registerErrorGuru').innerText = 'Nama, email, dan password wajib diisi';
+                    return;
+                }
+                if (password.length < 6) {
+                    document.getElementById('registerErrorGuru').innerText = 'Password minimal 6 karakter';
+                    return;
+                }
+                try {
+                    var result = await apiCall('/api/auth/guru/register', 'POST', {
+                        nama: nama,
+                        nip: nip,
+                        email: email,
+                        password: password
+                    });
+                    if (result.success) {
+                        Session.setCurrentUser(Object.assign({}, result.user, {
+                            role: 'guru'
+                        }));
+                        renderDashboardGuru();
+                    } else {
+                        document.getElementById('registerErrorGuru').innerText = result.message || 'Registrasi gagal';
+                    }
+                } catch (err) {
+                    document.getElementById('registerErrorGuru').innerText = err.message;
+                }
+            };
+            document.getElementById('backToHomeGuru').onclick = function() {
+                renderHome();
+            };
+        }
+
+        async function renderDashboardSiswa() {
+            var user = Session.getCurrentUser();
+            if (!user || user.role !== 'siswa') {
+                renderHome();
+                return;
+            }
+
+            var materiList = [];
+            try {
+                var result = await apiCall('/api/materi', 'GET');
+                if (result.success) materiList = result.data;
+            } catch (err) {
+                console.log('Gagal mengambil materi:', err);
+            }
+
+            var materiHtml = '';
+            for (var i = 0; i < materiList.length; i++) {
+                var materi = materiList[i];
+                materiHtml += `
+                    <div class="dash-card">
+                        <h3>📖 ${escapeHtml(materi.judul)}</h3>
+                        <p>${escapeHtml(materi.deskripsi || 'Tidak ada deskripsi')}</p>
+                        <p><small>📅 ${new Date(materi.tanggal).toLocaleDateString('id-ID')}</small></p>
+                    </div>
+                `;
+            }
+            if (materiList.length === 0) {
+                materiHtml = '<div class="dash-card"><p style="color:white;">📭 Belum ada materi yang tersedia.</p></div>';
+            }
+
+            document.getElementById('app').innerHTML = `
+                <div class="dashboard-container">
+                    <div class="navbar">
+                        <h2>📚 Selamat Datang, ${escapeHtml(user.nama || user.email)}</h2>
+                        <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+                    </div>
+                    <div class="dashboard-grid">
+                        ${materiHtml}
+                    </div>
+                </div>
+            `;
+            document.getElementById('logoutBtn').onclick = function() {
+                Session.clearSession();
+                renderHome();
+            };
+        }
+
+        async function renderDashboardGuru() {
+            var user = Session.getCurrentUser();
+            if (!user || user.role !== 'guru') {
+                renderHome();
+                return;
+            }
+
+            var materiList = [];
+            try {
+                var result = await apiCall('/api/materi', 'GET');
+                if (result.success) materiList = result.data;
+            } catch (err) {
+                console.log('Gagal mengambil materi:', err);
+            }
+
+            var materiHtml = '';
+            for (var i = 0; i < materiList.length; i++) {
+                var materi = materiList[i];
+                materiHtml += `
+                    <div class="dash-card">
+                        <h3>📖 ${escapeHtml(materi.judul)}</h3>
+                        <p>${escapeHtml(materi.deskripsi || 'Tidak ada deskripsi')}</p>
+                        <p><small>📅 ${new Date(materi.tanggal).toLocaleDateString('id-ID')}</small></p>
+                        <button class="small-btn" style="background:#ff6b6b;" onclick="deleteMateri('${materi.id}')">🗑 Hapus</button>
+                    </div>
+                `;
+            }
+            if (materiList.length === 0) {
+                materiHtml = '<div class="dash-card"><p style="color:white;">📭 Belum ada materi. Buat materi pertama Anda!</p></div>';
+            }
+
+            document.getElementById('app').innerHTML = `
+                <div class="dashboard-container">
+                    <div class="navbar">
+                        <h2>👨‍🏫 Dashboard Guru - ${escapeHtml(user.nama || user.email)}</h2>
+                        <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div class="dash-card">
+                            <h3>➕ Tambah Materi Baru</h3>
+                            <div class="form-group"><input type="text" id="judulMateri" placeholder="Judul Materi"></div>
+                            <div class="form-group"><textarea id="deskripsiMateri" rows="3" placeholder="Deskripsi materi..."></textarea></div>
+                            <button class="small-btn" id="tambahMateriBtn">📤 Upload Materi</button>
+                            <div id="materiError" class="error-message"></div>
+                            <div id="materiSuccess" class="success-message"></div>
+                        </div>
+                        ${materiHtml}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('logoutBtn').onclick = function() {
+                Session.clearSession();
+                renderHome();
+            };
+
+            document.getElementById('tambahMateriBtn').onclick = async function() {
+                var judul = document.getElementById('judulMateri').value;
+                var deskripsi = document.getElementById('deskripsiMateri').value;
+                var errorDiv = document.getElementById('materiError');
+                var successDiv = document.getElementById('materiSuccess');
+
+                if (!judul) {
+                    errorDiv.innerText = 'Judul materi wajib diisi';
+                    successDiv.innerText = '';
+                    return;
+                }
+                errorDiv.innerText = '';
+                successDiv.innerText = '⏳ Mengupload materi...';
+
+                try {
+                    var result = await apiCall('/api/materi', 'POST', {
+                        judul: judul,
+                        deskripsi: deskripsi
+                    });
+                    if (result.success) {
+                        successDiv.innerText = '✅ Materi berhasil ditambahkan!';
+                        setTimeout(function() {
+                            renderDashboardGuru();
+                        }, 1000);
+                    } else {
+                        errorDiv.innerText = result.message || 'Gagal menambah materi';
+                        successDiv.innerText = '';
+                    }
+                } catch (err) {
+                    errorDiv.innerText = err.message;
+                    successDiv.innerText = '';
+                }
+            };
+        }
+
+        window.deleteMateri = async function(id) {
+            if (!confirm('Yakin ingin menghapus materi ini?')) return;
+            try {
+                var result = await apiCall('/api/materi/' + id, 'DELETE');
+                if (result.success) {
+                    renderDashboardGuru();
+                } else {
+                    alert('Gagal menghapus materi');
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        };
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function checkSession() {
+            var user = Session.getCurrentUser();
+            if (user) {
+                if (user.role === 'siswa') renderDashboardSiswa();
+                else if (user.role === 'guru') renderDashboardGuru();
+                else renderHome();
+            } else {
+                renderHome();
+            }
+        }
+
+        createBubbles();
+        checkServerStatus();
+        checkSession();
+    </script>
+</body>
+
+</html>
